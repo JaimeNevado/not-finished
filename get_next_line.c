@@ -6,7 +6,7 @@
 /*   By: jnevado- <jnevado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 15:04:57 by jnevado-          #+#    #+#             */
-/*   Updated: 2022/09/27 17:18:28 by jnevado-         ###   ########.fr       */
+/*   Updated: 2022/09/28 15:06:06 by jnevado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,59 +15,111 @@
 #include <stdio.h>
 #include "get_next_line.h"
 
-char	*ft_get_line(char *raw)
-{
-	char	*str;
-	int		i;
+size_t	ft_strlen(const char *str)
+{	
+	size_t	i;
 
 	i = 0;
-	while (raw[i] != '\n')
-		i++;
-	str = malloc((sizeof(char) * i) + 1);
-	i = 0;
-	while (raw[i] != '\n')
+	while (*str)
 	{
-		str[i] = raw[i];
 		i++;
+		str++;
+	}
+	return (i);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	j = 0;
+	if (!s1)
+		return (0);
+	str = (char *)malloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
+	if (!str)
+		return (0);
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+	{
+		str[i] = s2[j];
+		i++;
+		j++;
 	}
 	str[i] = '\0';
 	return (str);
 }
 
-/*
+int	ft_get_line_lenght(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\n')
+		i++;
+	return (i);
+}
+
+char	*ft_get_line(char *raw)
+{
+	static char	*str;
+	static char	*rest;
+	int			i;
+	int			j;
+
+	i = ft_get_line_lenght(raw);
+	str = malloc((sizeof(char) * i) + 1);
+	j = 0;
+	while (raw[j] != '\n')
+	{
+		str[j] = raw[j];
+		j++;
+	}
+	i = 0;
+	rest = malloc((sizeof(char) * (BUFFER_SIZE - j)) + 1);
+	while (j < BUFFER_SIZE)
+	{
+		rest[i] = raw[j];
+		i++;
+		j++;
+	}
+	str[j] = '\0';
+	return (ft_strjoin(str, rest));
+}
+
 char	*get_next_line(int fd)
 {
-	printf("%*u\n", read(fd, BUFFER_SIZE, 4));
-	return (0);
-}
-*/
-
-int	main(void)
-{
-	int		fd;
-	char	buf[BUFFER_SIZE + 1];
-	int		nr_bytes;
-	char	*string;
+	char		buf[BUFFER_SIZE + 1];
+	int			nr_bytes;
 
 	buf[BUFFER_SIZE] = '\0';
-	fd = open ("texto.txt", O_RDONLY);
 	if (fd == -1)
 	{
-		printf("No Funciona");
+		return (NULL);
 	}
 	else
 	{
 		nr_bytes = read(fd, buf, BUFFER_SIZE);
-		close(fd);
 		if (nr_bytes == 0)
-		{
-			printf("Archivo vacio \n");
-		}
-		else
-		{
-			printf("El numero de caracteres es %d", nr_bytes);
-			printf(" contenido: %s \n ", ft_get_line(buf));
-		}
+			return (NULL);
 	}
+	return (ft_get_line(buf));
+}
+
+int	main(void)
+{
+	int			fd;
+
+	fd = open ("texto.txt", O_RDONLY);
+	if (fd == -1)
+		return (-1);
+	printf(" contenido: %s \n ", get_next_line(fd));
+	close(fd);
 	return (0);
 }
