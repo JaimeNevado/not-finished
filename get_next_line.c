@@ -6,120 +6,72 @@
 /*   By: jnevado- <jnevado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 15:04:57 by jnevado-          #+#    #+#             */
-/*   Updated: 2022/09/28 15:06:06 by jnevado-         ###   ########.fr       */
+/*   Updated: 2022/10/18 15:11:19 by jnevado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *str)
-{	
-	size_t	i;
+void	ft_clean_memory(char	**memory)
+{
+	char	*new_memo;
+	int 	len;
+	int 	new_size;
 
-	i = 0;
-	while (*str)
+	if (*memory == NULL)
 	{
-		i++;
-		str++;
+		*memory = (char *) malloc (sizeof(char));
+		**memory = '\0';
+		return ;
 	}
-	return (i);
+	len = ft_line_len(*memory);
+	new_size = ft_strlen(&(*memory)[len]) + 1;
+	new_memo = (char *) malloc(sizeof(char) * new_size);
+	ft_memcpy(new_memo, &(*memory)[len], new_size);
+	free(*memory);
+	*memory = new_memo;
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+int	ft_fill_memory(char **memory, int fd)
 {
-	int		i;
-	int		j;
-	char	*str;
+	char	buffer[BUFFER_SIZE + 1];
+	int		ret;
+	char	*tmp;
 
-	i = 0;
-	j = 0;
-	if (!s1)
-		return (0);
-	str = (char *)malloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
-	if (!str)
-		return (0);
-	while (s1[i])
+	ft_clean_memory(memory);
+	ret = 1;
+	while (!ft_strchr(*memory, '\n') && ret)
 	{
-		str[i] = s1[i];
-		i++;
+		ret = reaf(fd, buffer, BUFFER_SIZE);
+		if (ret < 1)
+		{
+			return (ret);
+		}
+		buffer[ret] = '\0';
+		tmp = *memory;
+		*memory = ft_strjoin(*memory, buffer);
+		free(tmp);
 	}
-	while (s2[j])
-	{
-		str[i] = s2[j];
-		i++;
-		j++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-int	ft_get_line_lenght(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\n')
-		i++;
-	return (i);
-}
-
-char	*ft_get_line(char *raw)
-{
-	static char	*str;
-	static char	*rest;
-	int			i;
-	int			j;
-
-	i = ft_get_line_lenght(raw);
-	str = malloc((sizeof(char) * i) + 1);
-	j = 0;
-	while (raw[j] != '\n')
-	{
-		str[j] = raw[j];
-		j++;
-	}
-	i = 0;
-	rest = malloc((sizeof(char) * (BUFFER_SIZE - j)) + 1);
-	while (j < BUFFER_SIZE)
-	{
-		rest[i] = raw[j];
-		i++;
-		j++;
-	}
-	str[j] = '\0';
-	return (ft_strjoin(str, rest));
 }
 
 char	*get_next_line(int fd)
 {
-	char		buf[BUFFER_SIZE + 1];
-	int			nr_bytes;
+	static	char	*memory = NULL;
+	char			*line;
 
-	buf[BUFFER_SIZE] = '\0';
-	if (fd == -1)
+	if (ft_fill_memory(&memory, fd) == -1)
 	{
+		free(memory);
+		memory = NULL;
 		return (NULL);
 	}
-	else
+	line = ft_get_line(&memory);
+	if (!line)
 	{
-		nr_bytes = read(fd, buf, BUFFER_SIZE);
-		if (nr_bytes == 0)
-			return (NULL);
+		free(memory);
+		memory = NULL;
 	}
-	return (ft_get_line(buf));
-}
-
-int	main(void)
-{
-	int			fd;
-
-	fd = open ("texto.txt", O_RDONLY);
-	if (fd == -1)
-		return (-1);
-	printf(" contenido: %s \n ", get_next_line(fd));
-	close(fd);
-	return (0);
+	return (line);
 }
