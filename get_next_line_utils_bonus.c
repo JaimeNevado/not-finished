@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jaimenevado <jaimenevado@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/23 15:04:52 by jnevado-          #+#    #+#             */
-/*   Updated: 2022/11/02 17:42:22 by jaimenevado      ###   ########.fr       */
+/*   Created: 2022/11/02 17:40:58 by jaimenevado       #+#    #+#             */
+/*   Updated: 2022/11/02 17:42:17 by jaimenevado      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
