@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaimenevado <jaimenevado@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jnevado- <jnevado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 15:04:52 by jnevado-          #+#    #+#             */
-/*   Updated: 2022/11/02 17:42:22 by jaimenevado      ###   ########.fr       */
+/*   Updated: 2022/11/04 15:53:06 by jnevado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,23 @@ size_t	ft_strlen(const char *s)
 	while (*s++)
 		len++;
 	return (len);
+}
+
+void	*ft_memcpy(void *dst, const void *src, unsigned int n)
+{
+	unsigned char	*tmp;
+	unsigned char	*src_tmp;
+
+	if (dst == 0 && src == 0)
+		return (0);
+	tmp = (unsigned char *) dst;
+	src_tmp = (unsigned char *) src;
+	while (n > 0)
+	{
+		*tmp++ = *src_tmp++;
+		n--;
+	}
+	return (dst);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -66,4 +83,16 @@ char	*ft_strjoin(char *save, char *buff)
 	str[ft_strlen(save) + ft_strlen(buff)] = '\0';
 	free(save);
 	return (str);
+}
+
+int	ft_line_len(char *ptr)
+{
+	int	len;
+
+	len = 0;
+	while (ptr[len] && ptr[len] != '\n')
+		len++;
+	if (ptr[len] == '\n')
+		len++;
+	return (len);
 }

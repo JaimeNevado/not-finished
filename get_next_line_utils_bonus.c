@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaimenevado <jaimenevado@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jnevado- <jnevado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 17:40:58 by jaimenevado       #+#    #+#             */
-/*   Updated: 2022/11/04 11:34:28 by jaimenevado      ###   ########.fr       */
+/*   Updated: 2022/11/04 16:03:48 by jnevado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char *s)
+unsigned int	ft_strlen(const char *s)
 {
 	unsigned int	len;
 
@@ -22,48 +23,66 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
+void	*ft_memcpy(void *dst, const void *src, unsigned int n)
+{
+	unsigned char	*tmp;
+	unsigned char	*src_tmp;
+
+	if (dst == 0 && src == 0)
+		return (0);
+	tmp = (unsigned char *) dst;
+	src_tmp = (unsigned char *) src;
+	while (n > 0)
+	{
+		*tmp++ = *src_tmp++;
+		n--;
+	}
+	return (dst);
+}
+
 char	*ft_strchr(const char *s, int c)
 {
-	unsigned int	i;
+	char	*ptr;
 
-	i = 0;
-	if (!s)
-		return (0);
-	if (c == '\0')
-		return ((char *)&s[ft_strlen(s)]);
-	while (s[i] != '\0')
+	ptr = (char *)s;
+	while (*ptr)
 	{
-		if (s[i] == (char)c)
-			return ((char *)&s[i]);
-		i++;
+		if (*ptr == c)
+			return (ptr);
+		ptr++;
 	}
+	if (*ptr == c)
+		return (ptr);
 	return (0);
 }
 
-char	*ft_strjoin(char *save, char *buff)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	i;
-	size_t	j;
-	char	*str;
+	unsigned int	size;
+	char			*ptr;
+	int				i;
 
-	if (!save)
-	{
-		save = (char *)malloc(1 * sizeof (char));
-		save[0] = '\0';
-	}
-	if (!save || !buff)
-		return (NULL);
-	str = malloc(sizeof(char) * ((ft_strlen(save) + ft_strlen(buff)) + 1));
-	if (str == NULL)
-		return (NULL);
-	i = -1;
-	j = 0;
-	if (save)
-		while (save[++i] != '\0')
-			str[i] = save[i];
-	while (buff[j] != '\0')
-		str[i++] = buff [j++];
-	str[ft_strlen(save) + ft_strlen(buff)] = '\0';
-	free(save);
-	return (str);
+	size = ft_strlen(s1) + ft_strlen(s2) + 1;
+	ptr = (char *) malloc(sizeof(char) * size);
+	if (ptr == 0)
+		return (ptr);
+	i = 0;
+	while (*s1)
+		ptr[i++] = *s1++;
+	while (*s2)
+		ptr[i++] = *s2++;
+	ptr[i] = '\0';
+	return (ptr);
+}
+
+int	ft_line_len(char *ptr)
+{
+	int	len;
+
+	len = 0;
+	while (ptr[len] && ptr[len] != '\n')
+		len++;
+	if (ptr[len] == '\n')
+		len++;
+	return (len);
 }

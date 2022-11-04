@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaimenevado <jaimenevado@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jnevado- <jnevado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 11:31:54 by jaimenevado       #+#    #+#             */
-/*   Updated: 2022/11/04 11:32:06 by jaimenevado      ###   ########.fr       */
+/*   Updated: 2022/11/04 16:04:14 by jnevado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
